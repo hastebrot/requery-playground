@@ -14,12 +14,19 @@ import io.requery.sql.EntityDataStore
 import io.requery.sql.SchemaModifier
 import io.requery.sql.StatementListener
 import io.requery.sql.TableCreationMode
+import org.apache.logging.log4j.Level
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.core.LoggerContext
+import org.apache.logging.log4j.core.appender.ConsoleAppender
+import org.apache.logging.log4j.core.layout.PatternLayout
 import rx.schedulers.Schedulers
 import java.sql.Statement
 import javax.cache.Caching
 import javax.sql.DataSource
 
 fun main(args: Array<String>) {
+    configureRootLogger()
+
     val dataSource = buildDataSource()
     val entityModel = Models.ENTITY
 
@@ -104,7 +111,20 @@ private fun buildDataSource(): DataSource {
     return dataSource
 }
 
-val sqlStatementListener = object : StatementListener {
+private fun configureRootLogger() {
+    val loggerContext = LogManager.getContext(false) as LoggerContext
+    val consoleAppender = ConsoleAppender
+        .createDefaultAppenderForLayout(PatternLayout.createDefaultLayout())
+        .apply { start() }
+    loggerContext.configuration
+        .getLoggerConfig(LogManager.ROOT_LOGGER_NAME)
+        .apply {
+            level = Level.ALL
+            addAppender(consoleAppender, null, null)
+        }
+}
+
+private val sqlStatementListener = object : StatementListener {
     override fun beforeExecuteQuery(statement: Statement,
                                     sql: String,
                                     parameters: BoundParameters?) {
