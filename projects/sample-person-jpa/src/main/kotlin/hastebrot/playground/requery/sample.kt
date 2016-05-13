@@ -1,9 +1,9 @@
 package hastebrot.playground.requery
 
 import com.zaxxer.hikari.HikariDataSource
-import hastebrot.playground.requery.modeljpa.AddressEntity
-import hastebrot.playground.requery.modeljpa.Models
-import hastebrot.playground.requery.modeljpa.PersonEntity
+import hastebrot.playground.requery.entity.AddressEntity
+import hastebrot.playground.requery.entity.Models
+import hastebrot.playground.requery.entity.PersonEntity
 import io.requery.Persistable
 import io.requery.cache.EntityCacheBuilder
 import io.requery.meta.EntityModel
@@ -21,7 +21,7 @@ import javax.sql.DataSource
 
 fun main(args: Array<String>) {
     val dataSource = buildDataSource()
-    val entityModel = Models.MODELJPA
+    val entityModel = Models.ENTITY
 
     val dataStoreConfig = buildDataStoreConfig(dataSource, entityModel)
     val dataStore = EntityDataStore<Persistable>(dataStoreConfig)
@@ -70,7 +70,7 @@ private fun runSamples(dataStore: EntityDataStore<Persistable>) {
             println(PersonEntity.AGE.property().get(it))
         }
 
-    Models.MODELJPA
+    Models.ENTITY
         .typeOf(PersonEntity::class.java)
         .attributes()
         .associateBy { it.name() }

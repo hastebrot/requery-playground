@@ -1,4 +1,4 @@
-package hastebrot.playground.requery.modeljpa
+package hastebrot.playground.requery.entity
 
 import io.requery.Persistable
 import io.requery.query.MutableResult
