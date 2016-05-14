@@ -25,7 +25,7 @@ import javax.cache.Caching
 import javax.sql.DataSource
 
 fun main(args: Array<String>) {
-    configureRootLogger()
+    configureRootLogger(Level.ALL)
 
     val dataSource = buildDataSource()
     val entityModel = Models.ENTITY
@@ -111,15 +111,18 @@ private fun buildDataSource(): DataSource {
     return dataSource
 }
 
-private fun configureRootLogger() {
+private fun configureRootLogger(loggerLevel: Level) {
     val loggerContext = LogManager.getContext(false) as LoggerContext
+    val loggerName = LogManager.ROOT_LOGGER_NAME
+
     val consoleAppender = ConsoleAppender
         .createDefaultAppenderForLayout(PatternLayout.createDefaultLayout())
         .apply { start() }
+
     loggerContext.configuration
-        .getLoggerConfig(LogManager.ROOT_LOGGER_NAME)
+        .getLoggerConfig(loggerName)
         .apply {
-            level = Level.ALL
+            level = loggerLevel
             addAppender(consoleAppender, null, null)
         }
 }
